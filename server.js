@@ -26,9 +26,11 @@ io.on('connection', socket => {
             io.sockets.emit("update", ob.user + " entrou no server.")
             messages.push({author:'<span class="server">Server</span>',message:ob.user + " entrou no server."});
         }
-        people.push(ob.user);
+        if(!(people.indexOf(ob.user)>=0)){
+            people.push(ob.user);
+            userCount++;
+        }
         io.sockets.emit('onlineUsers', people);
-        userCount++;
         io.sockets.emit('userCount', userCount);
         socket.on('disconnect', function() {
             userCount--;
