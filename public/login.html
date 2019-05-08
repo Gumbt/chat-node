@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat do Gumb</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <form action="/" method="POST" class="formLogin" >
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoSRXODTNtv8GuYc95yPrPUWi_INhx63J5iUXicoeAqa5mYtoddw" alt="" />
+            <input 
+                class="user"
+                type="text"
+                placeholder="Nome de usuario"
+                name="nome"
+                required
+            />
+            <button class="loginButton" type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+       $(document).ready(function(){
+            if($.cookie("nome")){
+                window.location = "/";
+            }
+            $(".formLogin").submit(function(e){
+                e.preventDefault();
+                var nome = $(".user").val();
+                $.cookie("nome", nome, { expires: 3 });
+                $.cookie("atv", 0, { expires: 3 });
+                
+
+                window.location = "/";
+            });
+       });
+    </script>
+</body>
+</html>

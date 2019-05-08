@@ -1,54 +1,114 @@
-html, body {
-    height: 100%;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  #chat {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  
-  input {
-    width: 600px;
-    border: 1px solid #ddd;
-    height: 50px;
-    padding: 0 20px;
-    font-size: 14px;
-  }
-  
-  button {
-    width: 600px;
-    height: 50px;
-    font-size: 14px;
-    background: #069;
-    text-align: center;
-    line-height: 50px;
-    font-weight: bold;
-    color: #FFF;
-    margin-top: 10px;
-  }
-  
-  .messages {
-    width: 600px;
-    height: 400px;
-    margin: 20px 0;
-    border: 1px solid #ddd;
-    padding: 20px;
-    overflow-y: scroll;
-  }
-  .online{
-      float:left;
-      width: 200px;
-      height: 500px;
-      position: fixed;
-      border: 1px solid gray;
-      margin: 10px;
-  }
+    html, body {
+        height: 100%;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    #chat {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    .inputTxt {
+        width: 600px;
+        border: 1px solid #ddd;
+        height: 50px;
+        padding: 0 20px;
+        font-size: 14px;
+    }
+    
+    .btn {
+        width: 600px;
+        height: 50px;
+        font-size: 14px;
+        background: #069;
+        text-align: center;
+        line-height: 50px;
+        font-weight: bold;
+        color: #FFF;
+        margin-top: 10px;
+    }
+    
+    .messages {
+        width: 600px;
+        height: 400px;
+        margin: 20px 0;
+        border: 1px solid #ddd;
+        padding: 20px;
+        overflow-y: scroll;
+    }
+    .message{
+        word-break: break-word;
+    }
+    .online{
+        float:left;
+        width: 200px;
+        height: 500px;
+        position: fixed;
+        border: 1px solid gray;
+        margin: 10px;
+    }
+    .container{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .container form{
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+    }
+    .container input{
+        height: 48px;
+        border: 1px solid #DDD;
+        border-radius: 4px;
+        font-size: 16px;
+        padding: 0 20px;
+        margin-top: 30px;
+    }
+    .loginButton {
+        height: 48px;
+        background: #4fad37;;
+        border-radius: 4px;
+        font-size: 16px;
+        padding: 0 20px;
+        margin-top: 10px;
+        color: #FFF;
+        font-weight: bold;
+        border: 0;
+        cursor: pointer;
+    }
+    .loginButton:hover {
+        opacity: 0.8;
+    }
+    .server{
+        color: red!important;
+    }
+    #logout{
+        float:right;
+        position: absolute;
+        margin:20px;
+        right:10px;
+        top: 0;
+    }
+    #logout button{
+        height: 30px;
+        background: #4fad37;;
+        border-radius: 4px;
+        font-size: 16px;
+        padding: 0 20px;
+        margin-top: 10px;
+        color: #FFF;
+        font-weight: bold;
+        border: 0;
+        cursor: pointer;
+    }
+    
