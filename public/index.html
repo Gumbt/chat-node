@@ -28,14 +28,17 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
             socket.emit("join", {user,atv});
             if(atv==0){
                 var date = new Date();
                 var minutes = 5;
                 date.setTime(date.getTime() + (minutes * 60 * 1000));
                 $.cookie("atv", 1, { expires: date });
+            }
+            if(!($.cookie("atv"))){
+                $.cookie("atv",0);
             }
 
             function scrollBottom(){
