@@ -14,16 +14,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="online">
-        <strong>Usuarios online: <span></span></strong>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="online">
+                    <strong>Usuarios online: <span></span></strong>
+                </div>
+            </div>
+            <div class="col-sm">
+                <form id="chat">
+                    <!--<input class="inputTxt" type="text" name="username" placeholder="Digite seu usuario">-->
+                    <div class="messages"></div>
+                    <input class="inputTxt" type="text" name="message" placeholder="Digite sua mensagem">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+            <div class="col-sm">
+                    <div id="logout"><button type="submit" class="sair">Sair</button></div>
+            </div>
+        </div>
     </div>
-    <form id="chat">
-        <!--<input class="inputTxt" type="text" name="username" placeholder="Digite seu usuario">-->
-        <div class="messages"></div>
-        <input class="inputTxt" type="text" name="message" placeholder="Digite sua mensagem">
-        <button type="submit" class="btn btn-primary">Enviar</button>
-    </form>
-    <div id="logout"><button type="submit" class="sair">Sair</button></div>
     <script type="text/javascript">
         if($.cookie("nome")){
             var user = $.cookie("nome");

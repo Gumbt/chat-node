@@ -44,15 +44,7 @@
     .message{
         word-break: break-word;
     }
-    .online{
-        float:left;
-        width: 200px;
-        min-height: 200px;
-        position: fixed;
-        border: 1px solid gray;
-        margin: 10px;
-        overflow-y: scroll;
-    }
+
     .container{
         height: 100%;
         display: flex;
@@ -71,6 +63,9 @@
         font-size: 16px;
         padding: 0 20px;
         margin-top: 30px;
+    }
+    .row{
+        width: 100%;
     }
     .loginButton {
         height: 48px;
