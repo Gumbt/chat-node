@@ -17,7 +17,6 @@ app.use('/', (req, res) => {
 let messages = [];
 let people = [];
 
-var userCount = 0;
 io.on('connection', socket => {
     socket.emit('previousMessages', messages);//pega mensagens anteriores
 
@@ -26,21 +25,18 @@ io.on('connection', socket => {
             io.sockets.emit("update", ob.user + " entrou no server.")
             messages.push({author:'<span class="server">Server</span>',message:ob.user + " entrou no server."});
         }
-        if(!(people.indexOf(ob.user)>=0)){
-            people.push(ob.user);
-            userCount++;
-        }
+        people.push(ob.user);
+    
         io.sockets.emit('onlineUsers', people);
-        io.sockets.emit('userCount', userCount);
+        //io.sockets.emit('userCount', userCount);
         socket.on('disconnect', function() {
-            userCount--;
-            io.sockets.emit('userCount', userCount);
+            //io.sockets.emit('userCount', userCount);
             var pos = people.indexOf(ob.user);
             if (pos >= 0)
                 people.splice(pos, 1);
             io.sockets.emit('onlineUsers', people);
         });
-        console.log(`Usuarios online: ${userCount}`);
+        console.log(`Usuarios online: ${people.length}`);
         console.log(`Socket conectado: ${socket.id}`);
     });
     

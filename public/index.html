@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,7 +21,7 @@
         <!--<input class="inputTxt" type="text" name="username" placeholder="Digite seu usuario">-->
         <div class="messages"></div>
         <input class="inputTxt" type="text" name="message" placeholder="Digite sua mensagem">
-        <button type="submit" class="btn">Enviar</button>
+        <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
     <div id="logout"><button type="submit" class="sair">Sair</button></div>
     <script type="text/javascript">
@@ -28,8 +29,12 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
+            if(!($.cookie("atv"))){
+                $.cookie("atv",0);
+                window.location = "/";
+            }
             socket.emit("join", {user,atv});
             if(atv==0){
                 var date = new Date();
@@ -37,10 +42,6 @@
                 date.setTime(date.getTime() + (minutes * 60 * 1000));
                 $.cookie("atv", 1, { expires: date });
             }
-            if(!($.cookie("atv"))){
-                $.cookie("atv",0);
-            }
-
             function scrollBottom(){
                 var wtf = $('.messages');
                 var height = wtf[0].scrollHeight;
@@ -62,19 +63,16 @@
             });
 
             socket.on('onlineUsers', function(usero){
+                let unique = [...new Set(usero)];
+                $('.online span').text(unique.length);
                 $('.usersOnline').remove();
-                for(let i=0;i<usero.length;i++){
-                    renderOnlineUsers(usero[i]);
+                for(let i=0;i<unique.length;i++){
+                    renderOnlineUsers(unique[i]);
                 }
             });
 
             socket.on('receivedMessage', function(message){
                 renderMessage(message);
-            });
-
-            socket.on('userCount', function(data) {
-                $('.online span').text(data);
-                console.log(data);
             });
 
             socket.on("update", function(msg) {
@@ -95,8 +93,8 @@
                     renderMessage(messageObject);
                     socket.emit('sendMessage', messageObject);
                     $('input[name=message]').val("");
-                    $('input[name=message]').focus();
                 }
+                $('input[name=message]').focus();
             });
             $('.sair').click(function(){
                 $.removeCookie('nome');

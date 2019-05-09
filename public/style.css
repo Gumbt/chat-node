@@ -26,11 +26,8 @@
     
     .btn {
         width: 600px;
-        height: 50px;
-        font-size: 14px;
-        background: #069;
         text-align: center;
-        line-height: 50px;
+        line-height: 30px;
         font-weight: bold;
         color: #FFF;
         margin-top: 10px;
@@ -50,10 +47,11 @@
     .online{
         float:left;
         width: 200px;
-        height: 500px;
+        min-height: 200px;
         position: fixed;
         border: 1px solid gray;
         margin: 10px;
+        overflow-y: scroll;
     }
     .container{
         height: 100%;
