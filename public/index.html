@@ -29,7 +29,7 @@
                 <form id="chat">
                     <!--<input class="inputTxt" type="text" name="username" placeholder="Digite seu usuario">-->
                     <div class="messages"></div>
-                    <input class="inputTxt" type="text" name="message" placeholder="Digite sua mensagem">
+                    <input class="inputTxt" autocomplete="off" type="text" name="message" placeholder="Digite sua mensagem">
                     <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
             </div>
@@ -101,11 +101,17 @@
                         author: author,
                         message: message,
                     };
-
-                    renderMessage(messageObject);
-                    socket.emit('sendMessage', messageObject);
-                    $('input[name=message]').val("");
+                    if(messageObject.message[0]=="/"){
+                        if(messageObject.message=="/limpachat")
+                            $('.message').remove();
+                        renderMessage(messageObject);
+                        socket.emit('comandos', messageObject);
+                    }else{
+                        renderMessage(messageObject);
+                        socket.emit('sendMessage', messageObject);
+                    }
                 }
+                $('input[name=message]').val("");
                 $('input[name=message]').focus();
             });
             $('.sair').click(function(){
