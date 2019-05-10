@@ -40,8 +40,8 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
             
             if(!($.cookie("atv"))){
                 $.cookie("atv",0);
@@ -64,7 +64,8 @@
                 var sv = (message.author=='Server')? ' Sv' : '' ; //verifica se o server mandou a msg
                 var cm = (message.message[0]=='/')? ' comando' : '' ; //verifica se a msg é um comando
                 var voce = ($.cookie("nome") == message.author)? ' you' : '' ; //verifica se a msg foi enviada pelo usuario
-                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="">' + message.author + '</span>: ' +message.message + '</div>');
+                
+                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="">' + message.author.replace(/<script/gm, '') + '</span>: ' + message.message.replace(/<script/gm, '') + '</div>');
                 scrollBottom();
             }
             function renderOnlineUsers(nome){
