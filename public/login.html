@@ -30,7 +30,8 @@
 
     <script type="text/javascript">
        $(document).ready(function(){
-            var socket = io('http://localhost:3000');
+            //var socket = io('http://localhost:3000');
+            var socket = io('https://chat-gumb.herokuapp.com/');
             if($.cookie("nome")){
                 window.location = "/";
             }
