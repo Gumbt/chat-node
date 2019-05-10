@@ -18,7 +18,16 @@ let messages = [];
 let people = [];
 
 io.on('connection', socket => {
-    socket.emit('previousMessages', messages);//pega mensagens anteriores
+    socket.on('pegaAnteriores', data => {   
+        socket.emit('previousMessages', messages);//pega mensagens anteriores
+    });
+    socket.on('verificaNome', data => {
+        var pos = people.indexOf(data);
+        if (pos >= 0)
+            socket.emit('nomeVerificado', false);
+        else
+            socket.emit('nomeVerificado', true);
+    });
 
     socket.on("join", ob => {
         if(ob.atv == 0){
@@ -28,9 +37,8 @@ io.on('connection', socket => {
         people.push(ob.user);
     
         io.sockets.emit('onlineUsers', people);
-        //io.sockets.emit('userCount', userCount);
-        socket.on('disconnect', function() {
-            //io.sockets.emit('userCount', userCount);
+
+        socket.on('disconnect', function() {//usuario sai do chat
             var pos = people.indexOf(ob.user);
             if (pos >= 0)
                 people.splice(pos, 1);
@@ -40,23 +48,61 @@ io.on('connection', socket => {
         console.log(`Socket conectado: ${socket.id}`);
     });
     socket.on('comandos', data => {
-        messages.push(data);
         cont=0;
-        if(data.message=="/limpachat"){
-            socket.emit("update", data.author + " limpou o chat.");
-        }
-        if(data.message=="/comandos"){
-            socket.emit("update", "<br><b>/limpachat</b> - Limpa o chat<br><b>/gumb</b> - Mensagem");
-        }
-        if(data.message=="/gumb"){
-            var msg = {author:'Server',message:"Gumb é incrivel"};
-            io.sockets.emit("update", msg.message);
-            messages.push(msg);
-        }else{
-            socket.emit("update", "Comando não encontrado, digite <b>/comandos</b> para ver os comandos");
-        }
 
-    })
+        switch(data.message.split(" ")[0]) {
+            case "/limpachat":
+                socket.emit("update", "você limpou o chat.");
+                break;
+            case "/comandos":
+                socket.emit("update", "<br><b>/limpachat</b> - Limpa o chat<br><b>/gumb</b> - Mensagem para todos<br><b>/kappa</b> - Emoticon<br><b>/voteban < nome ></b> - Votar para banir do chat<br><b>/pm < nome > < mensagem ></b> - enviar mensagem privada");
+                break;
+            case "/gumb":
+                socket.broadcast.emit('receivedMessage', data);
+                var msg = {author:'Server',message:"Gumb é incrivel"};
+                io.sockets.emit("update", msg.message);
+                cont++;
+                break;
+            case "/kappa":
+                socket.broadcast.emit('receivedMessage', data);
+                var msg = {author:'Server',message:"<img src='https://media.alienwarearena.com/media/A-post-about-the-us-that-isn-t-about-how-it-s-_11edacc56cb159b0f8616adc7524e4f7.png' width='80'/>"};
+                io.sockets.emit("update", msg.message);
+                cont++;
+                break;
+            case "/voteban":
+                var usuarioban = data.message.split(" ")[1];
+                var pos = people.indexOf(usuarioban);
+                if (pos >= 0){
+                    socket.broadcast.emit('receivedMessage', data);
+                    var msg = {author:'Server',message:"<b>"+data.author + "</b> votou para banir <b>"+ usuarioban +"</b>"};
+                    io.sockets.emit("update", msg.message);
+                    cont++;
+                }else{
+                    socket.emit("update", "Voteban alerta: Usuário não encontrado");
+                }
+                break;     
+            case "/pm":
+                var messageSplited = data.message.split(" ")
+                var usuario = messageSplited[1];
+                var mensagem = messageSplited.slice(2,messageSplited.length).join(" ");
+                
+                var pos = people.indexOf(usuario);
+                if (pos >= 0 && mensagem != ''){
+                    socket.emit('receivedMessage', {author: '<span style="color:blue">(PM)</span>',message: 'Mensagem privada enviada para <b>'+usuario+'</b>: ' + mensagem});
+                    var msg = {author:'<span style="color:blue">(PM)</span> '+data.author,message:mensagem,destino:usuario};
+                    io.sockets.emit("pmMessage", msg);
+                }else{
+                    socket.emit("update", "PM alerta: Usuário não encontrado ou mensagem invalida");
+                }
+                break;
+            default:
+                socket.emit("update", "Comando não encontrado, digite <b>/comandos</b> para ver os comandos");
+        }
+        if(cont>0){
+            messages.push(data);
+            messages.push(msg);
+        }
+    });
 
     socket.on('sendMessage', data => {//manda as mensagens para todos
         messages.push(data);//pega as msg do index

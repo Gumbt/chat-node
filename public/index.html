@@ -20,15 +20,15 @@
                 <div class="online">
                     <strong>Usuarios online: <span></span></strong>
                     <div class="onlineInside">
-
                     </div>
                 </div>
                 <div id="logout"><button type="submit" class="btn btn-danger btn-block sair">Sair</button></div>
             </div>
             <div class="col-sm">
                 <form id="chat">
-                    <!--<input class="inputTxt" type="text" name="username" placeholder="Digite seu usuario">-->
-                    <div class="messages"></div>
+                    <div class="messages">
+                            <div class="message anteriores" onClick="carregarAnteriores();">Clique aqui para carregar mensagens anteriores</div>
+                    </div>
                     <input class="inputTxt" autocomplete="off" type="text" name="message" placeholder="Digite sua mensagem">
                     <button type="submit" class="btn btn-primary">Enviar</button>
                 </form>
@@ -40,8 +40,9 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
+            
             if(!($.cookie("atv"))){
                 $.cookie("atv",0);
                 window.location = "/";
@@ -60,12 +61,20 @@
             }
             
             function renderMessage(message){
-                var sv = (message.author=='Server')? 'Sv' : '' ;
-                $('.messages').append('<div class="message '+sv+'"><span class="">' + message.author + '</span>: ' +message.message + '</div>');
-                scrollBottom()
+                var sv = (message.author=='Server')? ' Sv' : '' ; //verifica se o server mandou a msg
+                var cm = (message.message[0]=='/')? ' comando' : '' ; //verifica se a msg é um comando
+                var voce = ($.cookie("nome") == message.author)? ' you' : '' ; //verifica se a msg foi enviada pelo usuario
+                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="">' + message.author + '</span>: ' +message.message + '</div>');
+                scrollBottom();
             }
             function renderOnlineUsers(nome){
                 $('.onlineInside').append('<div class="usersOnline"><span>' + nome +'</span></div>');
+            }
+
+            function carregarAnteriores(){
+                $('.message').remove();
+                $('.anteriores').hide();
+                socket.emit('pegaAnteriores',1);
             }
 
             socket.on('previousMessages', function(messages){
@@ -86,6 +95,10 @@
             socket.on('receivedMessage', function(message){
                 renderMessage(message);
             });
+            socket.on('pmMessage', function(message){
+                if($.cookie("nome")==message.destino)
+                    renderMessage(message);
+            });
 
             socket.on("update", function(msg) {
                 renderMessage({author:'Server',message:msg});
@@ -93,7 +106,9 @@
 
             $('#chat').submit(function(event){
                 event.preventDefault();
-
+                if($.cookie("nome")!=user){
+                    window.location = "./login.html";
+                }
                 var author = $.cookie("nome");
                 var message = $('input[name=message]').val();
                 if(author.length && message.length){
@@ -101,9 +116,11 @@
                         author: author,
                         message: message,
                     };
-                    if(messageObject.message[0]=="/"){
-                        if(messageObject.message=="/limpachat")
+                    if(messageObject.message[0]=="/"){//verifica se a mensagem é um comando
+                        if(messageObject.message=="/limpachat"){
                             $('.message').remove();
+                            $('.messages').append('<div class="message anteriores" onClick="carregarAnteriores();">Clique aqui para carregar mensagens anteriores</div>');
+                        }
                         renderMessage(messageObject);
                         socket.emit('comandos', messageObject);
                     }else{

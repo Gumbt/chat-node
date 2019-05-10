@@ -30,17 +30,23 @@
 
     <script type="text/javascript">
        $(document).ready(function(){
+            var socket = io('http://localhost:3000');
             if($.cookie("nome")){
                 window.location = "/";
             }
             $(".formLogin").submit(function(e){
                 e.preventDefault();
                 var nome = $(".user").val();
-                $.cookie("nome", nome, { expires: 3 });
-                $.cookie("atv", 0, { expires: 3 });
-                
-
-                window.location = "/";
+                socket.emit("verificaNome", nome);
+                socket.on("nomeVerificado", function(boolean) {
+                    if(boolean==true){
+                        $.cookie("nome", nome, { expires: 3 });
+                        $.cookie("atv", 0, { expires: 3 });
+                        window.location = "/";
+                    }else{
+                        alert('Já existe um usuário online com o seu nome');
+                    }
+                });
             });
        });
     </script>

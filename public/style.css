@@ -139,5 +139,15 @@
         padding: 0 20px;
         margin-top: 10px;
     }
-    
+    .comando {
+        background-color: #c1d49b!important;
+    }
+    .anteriores{
+        cursor: pointer;
+        text-align: center;
+        background-color: #b3a7f5!important;
+    }
+    .you {
+        border: 1px solid #b78004;
+    }
     
