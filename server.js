@@ -23,7 +23,7 @@ io.on('connection', socket => {
     socket.on("join", ob => {
         if(ob.atv == 0){
             io.sockets.emit("update", ob.user + " entrou no server.")
-            messages.push({author:'<span class="server">Server</span>',message:ob.user + " entrou no server."});
+            messages.push({author:'Server',message:ob.user + " entrou no server."});
         }
         people.push(ob.user);
     
