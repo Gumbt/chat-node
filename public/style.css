@@ -17,7 +17,6 @@
     }
     
     .inputTxt {
-        width: 600px;
         border: 1px solid #ddd;
         height: 50px;
         padding: 0 20px;
@@ -25,7 +24,6 @@
     }
     
     form .btn {
-        width: 600px;
         text-align: center;
         line-height: 30px;
         font-weight: bold;
@@ -113,6 +111,7 @@
     }
     .usersOnline{
         margin: 10px;
+        cursor: pointer;
     }
     .usersOnline span{
         background-color: #4fad37;

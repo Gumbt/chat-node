@@ -27,6 +27,7 @@
             <div class="col-sm">
                 <form id="chat">
                     <div class="messages">
+                            <div class="message"><span>Server:</span> Digite /comandos para ver os comandos disponiveis</div>
                             <div class="message anteriores" onClick="carregarAnteriores();">Clique aqui para carregar mensagens anteriores</div>
                     </div>
                     <input class="inputTxt" autocomplete="off" type="text" name="message" placeholder="Digite sua mensagem">
@@ -69,13 +70,17 @@
                 scrollBottom();
             }
             function renderOnlineUsers(nome){
-                $('.onlineInside').append('<div class="usersOnline"><span>' + nome +'</span></div>');
+                $('.onlineInside').append('<div class="usersOnline" onClick="autoComplete(this);"><span>' + nome +'</span></div>');
             }
 
             function carregarAnteriores(){
                 $('.message').remove();
                 $('.anteriores').hide();
                 socket.emit('pegaAnteriores',1);
+            }
+            function autoComplete(b){
+                $('input[name=message]').val("/pm "+b.textContent+" ");
+                $('input[name=message]').focus();
             }
 
             socket.on('previousMessages', function(messages){
