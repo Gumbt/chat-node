@@ -48,13 +48,22 @@
         margin-top: 5px;
         overflow-x: hidden;
     }
-    .message span{
+    .message .nameauthor{
         font-weight: bold;
+        cursor: pointer;
+        color: black;
+    }
+    .aut{
+        font-weight: bold;
+        cursor: pointer;
+        color: black!important;
     }
     .Sv{
         background-color: #ecb4bf!important; 
     }
-    .Sv span{
+    .Sv .nameauthor{
+        font-weight: bold;
+        cursor: pointer;
         color: red!important; 
     }
     .container form{

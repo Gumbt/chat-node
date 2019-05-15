@@ -27,7 +27,7 @@
             <div class="col-sm">
                 <form id="chat">
                     <div class="messages">
-                            <div class="message"><span>Server:</span> Digite /comandos para ver os comandos disponiveis</div>
+                            <div class="message"><span>Server:</span> Digite <span class="aut" onClick="autoComplete(this,1)">/comandos</span> para ver os comandos disponiveis</div>
                             <div class="message anteriores" onClick="carregarAnteriores();">Clique aqui para carregar mensagens anteriores</div>
                     </div>
                     <input class="inputTxt" autocomplete="off" type="text" name="message" placeholder="Digite sua mensagem">
@@ -41,8 +41,8 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
             
             if(!($.cookie("atv"))){
                 $.cookie("atv",0);
@@ -66,11 +66,11 @@
                 var cm = (message.message[0]=='/')? ' comando' : '' ; //verifica se a msg é um comando
                 var voce = ($.cookie("nome") == message.author)? ' you' : '' ; //verifica se a msg foi enviada pelo usuario
                 
-                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="">' + message.author.replace(/<script/gm, '') + '</span>: ' + message.message.replace(/<script/gm, '') + '</div>');
+                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="nameauthor" onClick="autoComplete(this,0)">' + message.author.replace(/<script/gm, '') + '</span>: ' + message.message.replace(/<script/gm, '') + '</div>');
                 scrollBottom();
             }
             function renderOnlineUsers(nome){
-                $('.onlineInside').append('<div class="usersOnline" onClick="autoComplete(this);"><span>' + nome +'</span></div>');
+                $('.onlineInside').append('<div class="usersOnline" onClick="autoComplete(this,0);"><span>' + nome +'</span></div>');
             }
 
             function carregarAnteriores(){
@@ -78,9 +78,16 @@
                 $('.anteriores').hide();
                 socket.emit('pegaAnteriores',1);
             }
-            function autoComplete(b){
-                $('input[name=message]').val("/pm "+b.textContent+" ");
-                $('input[name=message]').focus();
+            function autoComplete(b, com){
+                if(com==0){
+                    if(b.textContent!="Server"){
+                        $('input[name=message]').val("/pm "+b.textContent.replace('(PM) ', '')+" ");
+                        $('input[name=message]').focus();
+                    }
+                }else{
+                    $('input[name=message]').val(b.textContent);
+                    $('input[name=message]').focus();
+                }
             }
 
             socket.on('previousMessages', function(messages){

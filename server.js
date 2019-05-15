@@ -55,7 +55,7 @@ io.on('connection', socket => {
                 socket.emit("update", "você limpou o chat.");
                 break;
             case "/comandos":
-                socket.emit("update", "<br><b>/limpachat</b> - Limpa o chat<br><b>/gumb</b> - Mensagem para todos<br><b>/kappa</b> - Emoticon<br><b>/voteban < nome ></b> - Votar para banir do chat<br><b>/pm < nome > < mensagem ></b> - enviar mensagem privada");
+                socket.emit("update", "<br><span class='aut' onClick='autoComplete(this,1)'>/limpachat</span> - Limpa o chat<br><span class='aut' onClick='autoComplete(this,1)'>/gumb</span> - Mensagem para todos<br><span class='aut' onClick='autoComplete(this,1)'>/kappa</span> - Emoticon<br><span class='aut' onClick='autoComplete(this,1)'>/voteban</span><b> < nome ></b> - Votar para banir do chat<br><span class='aut' onClick='autoComplete(this,1)'>/pm</span><b> < nome > < mensagem ></b> - enviar mensagem privada");
                 break;
             case "/gumb":
                 socket.broadcast.emit('receivedMessage', data);
@@ -88,7 +88,7 @@ io.on('connection', socket => {
                 
                 var pos = people.indexOf(usuario);
                 if (pos >= 0 && mensagem != ''){
-                    socket.emit('receivedMessage', {author: '<span style="color:blue">(PM)</span>',message: 'Mensagem privada enviada para <b>'+usuario+'</b>: ' + mensagem});
+                    socket.emit('receivedMessage', {author: '<span style="color:blue">(PM)</span> '+ data.author,message: 'Mensagem privada enviada para <b>'+usuario+'</b>: ' + mensagem});
                     var msg = {author:'<span style="color:blue">(PM)</span> '+data.author,message:mensagem,destino:usuario};
                     io.sockets.emit("pmMessage", msg);
                 }else{
@@ -96,7 +96,7 @@ io.on('connection', socket => {
                 }
                 break;
             default:
-                socket.emit("update", "Comando não encontrado, digite <b>/comandos</b> para ver os comandos");
+                socket.emit("update", "Comando não encontrado, digite <span class='aut' onClick='autoComplete(this,1)'>/comandos</span> para ver os comandos");
         }
         if(cont>0){
             messages.push(data);
