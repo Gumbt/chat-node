@@ -41,8 +41,8 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
             
             if(!($.cookie("atv"))){
                 $.cookie("atv",0);
@@ -66,7 +66,7 @@
                 var cm = (message.message[0]=='/')? ' comando' : '' ; //verifica se a msg é um comando
                 var voce = ($.cookie("nome") == message.author)? ' you' : '' ; //verifica se a msg foi enviada pelo usuario
                 
-                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="nameauthor" onClick="autoComplete(this,0)">' + message.author.replace(/<script/gm, '') + '</span>: ' + message.message.replace(/<script/gm, '') + '</div>');
+                $('.messages').append('<div class="message'+sv+cm+voce+'"><span class="nameauthor" onClick="autoComplete(this,0)">' + message.author.replace(/<script/gm, '') + '</span>: ' + message.message.replace(/<script/gm, '') + '- '+message.hora+'</div>');
                 scrollBottom();
             }
             function renderOnlineUsers(nome){
@@ -122,13 +122,17 @@
                 if($.cookie("nome")!=user){
                     window.location = "./login.html";
                 }
+                var data = new Date();
+                var hora    = data.getHours(); 
+                var min     = data.getMinutes();
+                var str_hora = hora + ':' + min;
                 var author = $.cookie("nome");
                 var message = $('input[name=message]').val();
                 if(author.length && message.length){
                     var messageObject = {
                         author: author,
                         message: message,
-                        io: $.cookie("io")
+                        hora: str_hora
                     };
                     if(messageObject.message[0]=="/"){//verifica se a mensagem é um comando
                         if(messageObject.message=="/limpachat"){
