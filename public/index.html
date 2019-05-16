@@ -41,8 +41,8 @@
             var user = $.cookie("nome");
             var atv = $.cookie("atv");
             
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
             
             if(!($.cookie("atv"))){
                 $.cookie("atv",0);
@@ -128,6 +128,7 @@
                     var messageObject = {
                         author: author,
                         message: message,
+                        io: $.cookie("io")
                     };
                     if(messageObject.message[0]=="/"){//verifica se a mensagem é um comando
                         if(messageObject.message=="/limpachat"){

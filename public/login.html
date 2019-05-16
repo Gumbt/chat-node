@@ -30,8 +30,8 @@
 
     <script type="text/javascript">
        $(document).ready(function(){
-            //var socket = io('http://localhost:3000');
-            var socket = io('https://chat-gumb.herokuapp.com/');
+            var socket = io('http://localhost:3000');
+            //var socket = io('https://chat-gumb.herokuapp.com/');
             if($.cookie("nome")){
                 window.location = "/";
             }
@@ -47,7 +47,7 @@
                             $.cookie("atv", 0, { expires: 3 });
                             window.location = "/";
                         }else{
-                            alert('Já existe um usuário online com o seu nome');
+                            alert('Já existe um usuário online com o seu nome ou voce ta tentando faze merda no chat');
                         }
                     });
                 }else{

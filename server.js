@@ -16,17 +16,22 @@ app.use('/', (req, res) => {
 
 let messages = [];
 let people = [];
-
+let test = [];
 io.on('connection', socket => {
     socket.on('pegaAnteriores', data => {   
         socket.emit('previousMessages', messages);//pega mensagens anteriores
     });
     socket.on('verificaNome', data => {
         var pos = people.indexOf(data);
-        if (pos >= 0)
+        var letters = /^[A-Za-z0-9]+$/;
+        if(data.match(letters)){
+            if (pos >= 0)
+                socket.emit('nomeVerificado', false);
+            else
+                socket.emit('nomeVerificado', true);
+        }else{
             socket.emit('nomeVerificado', false);
-        else
-            socket.emit('nomeVerificado', true);
+        }
     });
 
     socket.on("join", ob => {
@@ -35,7 +40,7 @@ io.on('connection', socket => {
             messages.push({author:'Server',message:ob.user + " entrou no server."});
         }
         people.push(ob.user);
-    
+        //test.push({nome:ob.user,id:socket.id});
         io.sockets.emit('onlineUsers', people);
 
         socket.on('disconnect', function() {//usuario sai do chat
@@ -44,6 +49,8 @@ io.on('connection', socket => {
                 people.splice(pos, 1);
             io.sockets.emit('onlineUsers', people);
         });
+        /*var test2 = [...new Set(test.map(x => x.nome))];
+        console.log(test2);*/
         console.log(`Usuarios online: ${people.length}`);
         console.log(`Socket conectado: ${socket.id}`);
     });
@@ -55,11 +62,23 @@ io.on('connection', socket => {
                 socket.emit("update", "você limpou o chat.");
                 break;
             case "/comandos":
-                socket.emit("update", "<br><span class='aut' onClick='autoComplete(this,1)'>/limpachat</span> - Limpa o chat<br><span class='aut' onClick='autoComplete(this,1)'>/gumb</span> - Mensagem para todos<br><span class='aut' onClick='autoComplete(this,1)'>/kappa</span> - Emoticon<br><span class='aut' onClick='autoComplete(this,1)'>/voteban</span><b> < nome ></b> - Votar para banir do chat<br><span class='aut' onClick='autoComplete(this,1)'>/pm</span><b> < nome > < mensagem ></b> - enviar mensagem privada");
+                socket.emit("update", "<br><span class='aut' onClick='autoComplete(this,1)'>/limpachat</span> - Limpa o chat<br><span class='aut' onClick='autoComplete(this,1)'>/gumb</span> - Mensagem para todos<br><span class='aut' onClick='autoComplete(this,1)'>/filipe</span> - Mensagem para todos<br><span class='aut' onClick='autoComplete(this,1)'>/kappa</span> - Emoticon<br><span class='aut' onClick='autoComplete(this,1)'>/voteban</span><b> < nome ></b> - Votar para banir do chat<br><span class='aut' onClick='autoComplete(this,1)'>/pm</span><b> < nome > < mensagem ></b> - enviar mensagem privada<br><span class='aut' onClick='autoComplete(this,1)'>/pedro</span> - Mensagem para todos<br>");
                 break;
             case "/gumb":
                 socket.broadcast.emit('receivedMessage', data);
                 var msg = {author:'Server',message:"Gumb é incrivel"};
+                io.sockets.emit("update", msg.message);
+                cont++;
+                break;
+            case "/filipe":
+                socket.broadcast.emit('receivedMessage', data);
+                var msg = {author:'Server',message:"Filipe nunca vai bugar meu chat, pq Gumb > Filipe"};
+                io.sockets.emit("update", msg.message);
+                cont++;
+                break;
+            case "/pedro":
+                socket.broadcast.emit('receivedMessage', data);
+                var msg = {author:'Server',message:"<img src='https://media1.tenor.com/images/4208dd8158669dffc801dff4ac023b46/tenor.gif?itemid=9323842'/>"};
                 io.sockets.emit("update", msg.message);
                 cont++;
                 break;
