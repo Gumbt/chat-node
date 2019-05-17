@@ -35,12 +35,22 @@ io.on('connection', socket => {
     });
 
     socket.on("join", ob => {
-        if(ob.atv == 0){
-            io.sockets.emit("update", ob.user + " entrou no server.");
-            messages.push({author:'Server',message:ob.user + " entrou no server."});
+        var pos = people.indexOf(ob.user);
+        var letters = /^[A-Za-z0-9]+$/;
+        if(ob.user.match(letters)){
+            if (pos >= 0 || ob.user=='Server'){
+                socket.emit('nomeNegado', true);
+            }else{
+                people.push(ob.user);
+                if(ob.atv == 0){
+                    io.sockets.emit("update", ob.user + " entrou no server.");
+                    messages.push({author:'Server',message:ob.user + " entrou no server."});
+                }
+            }
+        }else{
+            socket.emit('nomeNegado', true);
         }
-        people.push(ob.user);
-        //test.push({nome:ob.user,id:socket.id});
+
         io.sockets.emit('onlineUsers', people);
 
         socket.on('disconnect', function() {//usuario sai do chat
@@ -124,8 +134,23 @@ io.on('connection', socket => {
     });
 
     socket.on('sendMessage', data => {//manda as mensagens para todos
-        messages.push(data);//pega as msg do index
-        socket.broadcast.emit('receivedMessage', data);
+        var pos = people.indexOf(data.author);
+        var letters = /^[A-Za-z0-9]+$/;
+        if(data.author.match(letters)){
+            if (pos >= 0 || data.author!='Server'){
+                var date = new Date();
+                var hora    = date.getHours(); 
+                var min     = date.getMinutes();
+                if(min<10){min='0'+min}
+                var str_hora = hora + ':' + min;
+                data.hora = str_hora;
+                data.message = data.message.replace(/<input/gm, '')
+                messages.push(data);//pega as msg do index
+                socket.broadcast.emit('receivedMessage', data);
+            }else{
+                socket.emit('nomeNegado', true);
+            }
+        }
     });
 });
 

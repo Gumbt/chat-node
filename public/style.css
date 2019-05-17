@@ -158,4 +158,9 @@
     .you {
         border: 1px solid #b78004;
     }
+    .hora {
+        float: right;
+        color: gray;
+        font-size: 13px;
+    }
     
