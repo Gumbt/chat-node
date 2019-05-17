@@ -64,7 +64,7 @@ io.on('connection', socket => {
         console.log(`Usuarios online: ${people.length}`);
         console.log(`Socket conectado: ${socket.id}`);
     });
-    socket.on('comandos', data => {
+    socket.on('cm', data => {
         cont=0;
 
         switch(data.message.split(" ")[0]) {
@@ -114,11 +114,15 @@ io.on('connection', socket => {
                 var messageSplited = data.message.split(" ")
                 var usuario = messageSplited[1];
                 var mensagem = messageSplited.slice(2,messageSplited.length).join(" ");
-                
+                var date = new Date();
+                var hora    = date.getHours(); 
+                var min     = date.getMinutes();
+                if(min<10){min='0'+min}
+                var str_hora = hora + ':' + min;
                 var pos = people.indexOf(usuario);
                 if (pos >= 0 && mensagem != ''){
-                    socket.emit('receivedMessage', {author: '<span style="color:blue">(PM)</span> '+ data.author,message: 'Mensagem privada enviada para <b>'+usuario+'</b>: ' + mensagem});
-                    var msg = {author:'<span style="color:blue">(PM)</span> '+data.author,message:mensagem,destino:usuario};
+                    socket.emit('receivedMessage', {author: '<span style="color:blue">(PM)</span> '+ data.author,message: 'Mensagem privada enviada para <b>'+usuario+'</b>: ' + mensagem,hora:str_hora});
+                    var msg = {author:'<span style="color:blue">(PM)</span> '+data.author,message:mensagem,destino:usuario,hora:str_hora};
                     io.sockets.emit("pmMessage", msg);
                 }else{
                     socket.emit("update", "PM alerta: Usuário não encontrado ou mensagem invalida");
@@ -133,7 +137,7 @@ io.on('connection', socket => {
         }
     });
 
-    socket.on('sendMessage', data => {//manda as mensagens para todos
+    socket.on('sm', data => {//manda as mensagens para todos
         var pos = people.indexOf(data.author);
         var letters = /^[A-Za-z0-9]+$/;
         if(data.author.match(letters)){
@@ -144,12 +148,14 @@ io.on('connection', socket => {
                 if(min<10){min='0'+min}
                 var str_hora = hora + ':' + min;
                 data.hora = str_hora;
-                data.message = data.message.replace(/<input/gm, '')
+                data.message = data.message.replace(/<input/gm, '');
                 messages.push(data);//pega as msg do index
                 socket.broadcast.emit('receivedMessage', data);
             }else{
                 socket.emit('nomeNegado', true);
             }
+        }else{
+            socket.emit('nomeNegado', true);
         }
     });
 });
